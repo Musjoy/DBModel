@@ -7,9 +7,6 @@
 //  <MODULE_DB_MANAGER>
 
 #import <Foundation/Foundation.h>
-#ifndef MODULE_DB_MANAGER
-#define MODULE_DB_MANAGER
-#endif
 #import "DBModel.h"
 #import "FMDB.h"
 
