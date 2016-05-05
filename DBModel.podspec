@@ -35,9 +35,13 @@ Pod::Spec.new do |s|
     ss.user_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => 'MODULE_DB_MANAGER'
     }
-    ss.pod_target_xcconfig = {
-      'GCC_PREPROCESSOR_DEFINITIONS' => 'MODULE_DB_MANAGER'
-    }
+    pch_AF = <<-EOS
+#ifndef MODULE_DB_MANAGER
+  #define MODULE_DB_MANAGER
+#endif
+EOS
+    ss.prefix_header_contents = pch_AF
+
   end
 
   s.dependency 'ModuleCapability', '~> 0.1.1'
