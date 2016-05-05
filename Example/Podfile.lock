@@ -1,0 +1,20 @@
+PODS:
+  - DBModel (0.1.0):
+    - DBModel/DBModel (= 0.1.0)
+    - ModuleCapability (~> 0.1.1)
+  - DBModel/DBModel (0.1.0):
+    - ModuleCapability (~> 0.1.1)
+  - ModuleCapability (0.1.1)
+
+DEPENDENCIES:
+  - DBModel (from `../`)
+
+EXTERNAL SOURCES:
+  DBModel:
+    :path: ../
+
+SPEC CHECKSUMS:
+  DBModel: 46b247fa71ff842eee8ae680509d21e80c0bef55
+  ModuleCapability: c58431991173e091993386b1840082a2540f2de1
+
+COCOAPODS: 0.39.0
