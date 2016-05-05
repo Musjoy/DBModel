@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'DBModel_Example', :exclusive => true do
+  pod 'DBModel', :path => '../'
+end
+
+target 'DBModel_Tests', :exclusive => true do
+  pod 'DBModel', :path => '../'
+
+  
+end
