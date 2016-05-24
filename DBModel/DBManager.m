@@ -8,7 +8,7 @@
 
 #import "DBManager.h"
 #ifdef MODULE_UM_ANALYSE
-#import "MobClick.h"
+#import HEADER_UM_ANALYSE
 #endif
 
 /** 最后一次数据库检查的app版本 */
@@ -88,7 +88,7 @@ static DBManager *s_dbManager = nil;
             }
             BOOL isSucceed = [self executeUpdates:arrSqls];
             if (!isSucceed) {
-                NSString *strErr = [NSString stringWithFormat:@"数据库[%@]跟新失败", tableName];
+                NSString *strErr = [NSString stringWithFormat:@"数据库[%@]更新失败", tableName];
                 triggerEvent(stat_Error, @{@"name":strErr});
             }
         }
