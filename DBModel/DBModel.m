@@ -744,7 +744,6 @@ static Class s_DBModelClass = NULL;
 //inspects the class, get's a list of the class properties
 + (void)__inspectProperties
 {
-    //JMLog(@"Inspect class: %@", [self class]);
     
     NSMutableDictionary *propertyIndex = [NSMutableDictionary dictionary];
     
@@ -752,9 +751,6 @@ static Class s_DBModelClass = NULL;
     Class class = [self class];
     NSScanner* scanner = nil;
     NSString* propertyType = nil;
-    
-    // 扫描层级，当前类层级为0，父类递增
-    int scanLevel = 0;
     
     // inspect inherited properties up to the JSONModel class
     while (class != [DBModel class]) {
@@ -804,7 +800,10 @@ static Class s_DBModelClass = NULL;
                 [scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\"<"]
                                         intoString:&propertyType];
                 
-                //JMLog(@"type: %@", propertyClassName);
+                if ([propertyType isEqualToString:@"@\""]) {
+                    // 这里类型是id, 忽略掉
+                    continue;
+                }
                 p.typeName = s_dicTypeDBNames[propertyType];
                 p.type = NSClassFromString(propertyType);
                 p.isMutable = ([propertyType rangeOfString:@"Mutable"].location != NSNotFound);
@@ -827,8 +826,7 @@ static Class s_DBModelClass = NULL;
                     [scanner scanUpToString:@">" intoString: &protocolName];
                     
                     if ([protocolName isEqualToString:@"Primary"]) {
-                        if (scanLevel == 0) {
-                            // 只处理第0级的主键
+                        if (objc_getAssociatedObject(self.class, &kClassPrimaryKey) == nil) {
                             p.isPrimary = YES;
                             if ([p.type isSubclassOfClass:[NSNumber class]]) {
                                 p.typeName = @"INTEGER";
@@ -869,6 +867,10 @@ static Class s_DBModelClass = NULL;
                 p.isAllowedClassype = NO;
                 p.structName = propertyType;
                 
+            }
+            else if ([scanner scanString:@"@," intoString: &propertyType]) {
+                // 这里类型是id, 忽略掉
+                continue;
             }
             //the property must be a primitive
             else {
@@ -912,7 +914,6 @@ static Class s_DBModelClass = NULL;
         }
         
         free(properties);
-        scanLevel++;
         class = [class superclass];
     }
     
