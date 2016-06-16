@@ -58,6 +58,21 @@ static DBManager *s_dbManager = nil;
     [self createTablesWithDBName:dbName];
 }
 
+- (void)openLibDB:(NSString *)dbName withTables:(NSArray *)arrTables
+{
+    if (_db) {
+        [_db close];
+        _db = nil;
+    }
+    
+    NSString *fileName = [dbName stringByAppendingString:@".sqlite"];
+    NSString *docsPath = [[NSBundle mainBundle] resourcePath];
+    NSString *dbPath   = [docsPath stringByAppendingPathComponent:fileName];
+    _db = [FMDatabase databaseWithPath:dbPath];
+    self.arrTables = arrTables;
+    [_db open];
+}
+
 - (void)setDefalutDateFormat:(NSDateFormatter *)aDateFormatter
 {
     if (aDateFormatter) {

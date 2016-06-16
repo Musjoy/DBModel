@@ -18,6 +18,8 @@
 
 /// 请先吊用openDefaultDB，之后才能使用下面的DB操作
 - (void)openDefaultDB:(NSString *)dbName withTables:(NSArray *)arrTables;
+///  打开项目中的DB，仅供测试使用，请勿使用
+- (void)openLibDB:(NSString *)dbName withTables:(NSArray *)arrTables __attribute__((deprecated("This just for testing, use openDefaultDB:withTables:")));
 /// 设置DBModel的时间格式
 - (void)setDefalutDateFormat:(NSDateFormatter *)aDateFormatter;
 
