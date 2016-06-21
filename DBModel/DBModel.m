@@ -41,13 +41,10 @@ static Class s_DBModelClass = NULL;
         
         @autoreleasepool {
             
-            s_dicErrors = @{    @"-10001" : @"解析数据为空",
-                                @"-10002" : @"Model初始化失败",
-                                @"-10003" : @"初始化所需的数据不是NSDictionary类型",
-                                @"-10004" : @"解析数据不是json数据",
-                                @"-10005" : @"解析数据为空",
-                                @"-10006" : @"解析数据为空",
-                                @"-10007" : @"解析数据为空",};
+            s_dicErrors = @{    @"-10001" : @"Json data is nil",
+                                @"-10002" : @"Model init failed",
+                                @"-10003" : @"Not a NSDictionary type",// @"初始化所需的数据不是NSDictionary类型",
+                                @"-10004" : @"Not a json data"};
             
             s_allowedClassTypes = @[
                                  [NSString class], [NSNumber class], [NSDecimalNumber class], //immutable JSON classes
@@ -95,8 +92,14 @@ static Class s_DBModelClass = NULL;
 
 + (NSError *)errorWithCode:(NSInteger)code
 {
-    NSError *err = [NSError errorWithDomain:[s_dicErrors objectForKey:[NSString stringWithFormat:@"%d", (int)code]]
-                                       code:code userInfo:nil];
+    NSString *errDesc = [s_dicErrors objectForKey:[NSString stringWithFormat:@"%d", (int)code]];
+    if (!errDesc) {
+        errDesc = @"";
+    }
+    NSError *err = [NSError errorWithDomain:@"DBModel"
+                                       code:code
+                                   userInfo:@{NSLocalizedDescriptionKey:errDesc,
+                                              NSLocalizedFailureReasonErrorKey:errDesc}];
     return err;
 }
 
