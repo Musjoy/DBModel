@@ -73,6 +73,9 @@ static DBManager *s_dbManager = nil;
     NSString *docsPath = [[NSBundle mainBundle] resourcePath];
     NSString *dbPath   = [docsPath stringByAppendingPathComponent:fileName];
     _db = [FMDatabase databaseWithPath:dbPath];
+    if (_curDateFormatter && _db) {
+        [_db setDateFormat:_curDateFormatter];
+    }
     self.arrTables = arrTables;
     [_db open];
 }
