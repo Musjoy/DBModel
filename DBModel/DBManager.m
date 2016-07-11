@@ -20,6 +20,7 @@ static DBManager *s_dbManager = nil;
 
 @property (nonatomic, strong) NSArray *arrTables;
 @property (nonatomic, strong) FMDatabase  *db;
+@property (nonatomic, strong) NSDateFormatter *curDateFormatter;
 
 @end
 
@@ -53,6 +54,9 @@ static DBManager *s_dbManager = nil;
     NSString *docsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
     NSString *dbPath   = [docsPath stringByAppendingPathComponent:fileName];
     _db = [FMDatabase databaseWithPath:dbPath];
+    if (_curDateFormatter && _db) {
+        [_db setDateFormat:_curDateFormatter];
+    }
     self.arrTables = arrTables;
     [_db open];
     [self createTablesWithDBName:dbName];
@@ -76,7 +80,11 @@ static DBManager *s_dbManager = nil;
 - (void)setDefalutDateFormat:(NSDateFormatter *)aDateFormatter
 {
     if (aDateFormatter) {
-        [DBModel setDateFormat:aDateFormatter];
+        _curDateFormatter = aDateFormatter;
+        [DBModel setDateFormat:_curDateFormatter];
+        if (_db) {
+            [_db setDateFormat:_curDateFormatter];
+        }
     }
 }
 
