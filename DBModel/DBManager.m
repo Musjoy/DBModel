@@ -7,7 +7,7 @@
 //
 
 #import "DBManager.h"
-#ifdef MODULE_UM_ANALYSE
+#ifdef HEADER_UM_ANALYSE
 #import HEADER_UM_ANALYSE
 #endif
 
