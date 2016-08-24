@@ -23,9 +23,9 @@
 @property (nonatomic, strong) NSNumber<DBInt> *storeOrder;              ///<  存储数据内部排序
 
 
-+ (NSArray<__kindof DBModel *> *)itemsOfClass:(NSString *)aClassName identifier:(NSString *)identifier orderBy:(NSString *)orderBy;
++ (__kindof NSArray<DBModel> *)itemsOfClass:(NSString *)aClassName identifier:(NSString *)identifier orderBy:(NSString *)orderBy;
 
-+ (NSArray<__kindof DBModel *> *)itemsOfClass:(NSString *)aClassName identifier:(NSString *)identifier;
++ (__kindof NSArray<DBModel> *)itemsOfClass:(NSString *)aClassName identifier:(NSString *)identifier;
 
 + (void)storeItems:(NSArray *)arrItems withClass:(NSString *)aClassName identifier:(NSString *)identifier;
 

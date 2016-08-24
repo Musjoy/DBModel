@@ -20,12 +20,12 @@ static DBItemStore *s_itemStore = nil;
 
 @implementation DBModel (DBItemStore)
 
-+ (NSArray<DBModel> *)theStoreItemsWithIdentifier:(NSString *)identifier
++ (__kindof NSArray<DBModel> *)theStoreItemsWithIdentifier:(NSString *)identifier
 {
     return [self theStoreItemsWithIdentifier:identifier orderBy:@"storeOrder"];
 }
 
-+ (NSArray<DBModel> *)theStoreItemsWithIdentifier:(NSString *)identifier orderBy:(NSString *)orderBy
++ (__kindof NSArray<DBModel> *)theStoreItemsWithIdentifier:(NSString *)identifier orderBy:(NSString *)orderBy
 {
     NSString *className = NSStringFromClass([self class]);
     return [DBItemStore itemsOfClass:className identifier:identifier orderBy:orderBy];
@@ -182,7 +182,6 @@ static DBItemStore *s_itemStore = nil;
     
     // 先找需要update的数据
     NSMutableArray *arrUpdate = [[NSMutableArray alloc] init];
-    NSMutableArray *arrInsertItems = [[NSMutableArray alloc] init];
     NSInteger index = 0;
     NSInteger len = MIN(arr.count, arrItems.count);
     NSString *idName = [itemClass primaryKey];
