@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "DBModel"
-  s.version          = "0.1.2"
+  s.version          = "0.1.3"
   s.summary          = "This is a combination of json parsing and database."
 
   s.homepage         = "https://github.com/Musjoy/DBModel"
@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
     ss.source_files = 'DBModel/DBManager.{h,m}', 'DBModel/DBTableInfo.{h,m}'
     ss.dependency 'DBModel/DBModel'
     ss.dependency 'FMDB'
-    s.dependency 'ModuleCapability', '~> 0.1.2'
+    s.dependency 'ModuleCapability', '~> 0.1'
     ss.user_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => 'MODULE_DB_MANAGER'
     }
@@ -46,6 +46,22 @@ EOS
 
   end
 
+  s.subspec 'DBItemStore' do |ss|
+    ss.source_files = 'DBModel/DBItemStore.{h,m}'
+    ss.dependency 'DBModel/DBManager'
+    s.dependency 'ModuleCapability', '~> 0.1'
+    ss.user_target_xcconfig = {
+      'GCC_PREPROCESSOR_DEFINITIONS' => 'MODULE_DB_ITEM_STORE'
+    }
+    pch_AF = <<-EOS
+#import "ModuleCapability.h"
+#ifndef MODULE_DB_ITEM_STORE
+  #define MODULE_DB_ITEM_STORE
+#endif
+EOS
+    ss.prefix_header_contents = pch_AF
+
+  end
   
 
 end

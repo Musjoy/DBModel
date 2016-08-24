@@ -634,6 +634,9 @@ static Class s_DBModelClass = NULL;
         [strValue appendString:strSeparateStr];
         [strSql appendString:p.name];
         if ([p.typeName hasSuffix:@"CHAR"]) {
+            if ([value isKindOfClass:[NSNumber class]]) {
+                value = [value stringValue];
+            }
             value = [value stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
             [strValue appendFormat:@"'%@'", value];
         } else if ([p.typeName isEqualToString:@"DATETIME"]) {
@@ -673,6 +676,9 @@ static Class s_DBModelClass = NULL;
         
         if ([p.typeName hasSuffix:@"CHAR"]) {
             NSString *oldValue = [result stringForColumn:p.name];
+            if ([newValue isKindOfClass:[NSNumber class]]) {
+                newValue = [newValue stringValue];
+            }
             newValue = [newValue stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
             if (oldValue == nil || ![newValue isEqualToString:oldValue]) {
                 newValueStr = [NSString stringWithFormat:@"'%@'", newValue];

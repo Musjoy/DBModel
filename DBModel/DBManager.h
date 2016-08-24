@@ -8,11 +8,20 @@
 
 #import <Foundation/Foundation.h>
 #import "DBModel.h"
-#import "FMDB.h"
+#import <FMDB/FMDB.h>
+
+#ifndef FILE_NAME_DB_CONFIG
+#define FILE_NAME_DB_CONFIG @"db_config"
+#endif
 
 @interface DBManager : NSObject
 
 + (DBManager *)shareInstance;
+
+/// 加载默认配置:
+/// 1、定义了<DEFAULT_DB_NAME>，默认打开名称为<DEFAULT_DB_NAME>的数据库，默认创建<DEFAULT_DB_TABLE_LIST>中定义的表
+/// 2、如果未定义<DEFAULT_DB_NAME>，寻找名字为<FILE_NAME_DB_CONFIG>的配置文件，根据字段theDBName和theTableList初始化数据
++ (void)configure;
 
 #pragma mark - Public
 
@@ -34,6 +43,8 @@
 + (BOOL)insertModelList:(NSArray *)arrModels;
 /** 强制插入数据库，不检查是否存在 */
 + (BOOL)forceInsertModelList:(NSArray *)arrModels;
+/// 插入列表中不存在于DB中的Model
++ (BOOL)insertModelListWhileNotExist:(NSArray *)arrModels;
 /** 更新model */
 + (BOOL)updateModel:(DBModel *)aModel;
 + (BOOL)updateModelList:(NSArray *)arrModels;

@@ -10,6 +10,12 @@
 #ifdef HEADER_UM_ANALYSE
 #import HEADER_UM_ANALYSE
 #endif
+#ifdef MODULE_FILE_SOURCE
+#import "FileSource.h"
+#endif
+#ifdef MODULE_DB_ITEM_STORE
+#import "DBItemStore.h"
+#endif
 
 /** 最后一次数据库检查的app版本 */
 #define kDBLastCheckVersion @"DBLastCheckVersion-"
@@ -35,6 +41,36 @@ static DBManager *s_dbManager = nil;
     return s_dbManager;
 }
 
++ (void)configure
+{
+#ifdef DEFAULT_DB_NAME
+    NSArray *arrTables = @[];
+    NSString *theDBName = DEFAULT_DB_NAME;
+#ifdef DEFAULT_DB_TABLE_LIST
+    arrTables = DEFAULT_DB_TABLE_LIST;
+#endif
+
+#else
+    NSString *theDBName = nil;
+    NSArray *arrTables = @[];
+    NSDictionary *aDic = getFileData(FILE_NAME_DB_CONFIG);
+    if (aDic) {
+        theDBName = aDic[@"theDBName"];
+        arrTables = aDic[@"theTableList"];
+    }
+#endif
+    if (theDBName.length > 0) {
+        if (arrTables == nil || ![arrTables isKindOfClass:[NSArray class]]) {
+            arrTables = @[];
+        }
+#ifdef DB_MANAGER_USE_LIB
+        [[self shareInstance] openLibDB:theDBName withTables:arrTables];
+#else
+        [[self shareInstance] openDefaultDB:theDBName withTables:arrTables];
+#endif
+    }
+}
+
 - (id)init
 {
     self = [super init];
@@ -57,6 +93,9 @@ static DBManager *s_dbManager = nil;
     if (_curDateFormatter && _db) {
         [_db setDateFormat:_curDateFormatter];
     }
+#ifdef MODULE_DB_ITEM_STORE
+    arrTables = [arrTables arrayByAddingObject:@"DBItemStore"];
+#endif
     self.arrTables = arrTables;
     [_db open];
     [self createTablesWithDBName:dbName];
@@ -76,6 +115,9 @@ static DBManager *s_dbManager = nil;
     if (_curDateFormatter && _db) {
         [_db setDateFormat:_curDateFormatter];
     }
+#ifdef MODULE_DB_ITEM_STORE
+    arrTables = [arrTables arrayByAddingObject:@"DBItemStore"];
+#endif
     self.arrTables = arrTables;
     [_db open];
 }
@@ -229,7 +271,8 @@ static DBManager *s_dbManager = nil;
     if ([aModel primaryValue] == nil) {
         return NO;
     }
-    NSString *strSql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE (%@='%@')", [aModel.class tableName], [aModel.class primaryKey], [aModel primaryValue]];
+    NSString *primaryKey = [aModel.class primaryKey];
+    NSString *strSql = [NSString stringWithFormat:@"SELECT %@ FROM %@ WHERE (%@='%@')", primaryKey, [aModel.class tableName], primaryKey, [aModel primaryValue]];
     FMResultSet *result = [[DBManager shareInstance] executeQuery:strSql];
     return result.next;
 }
@@ -259,6 +302,20 @@ static DBManager *s_dbManager = nil;
         [arrSql addObject:[aModel insertSql]];
     }
     return [[DBManager shareInstance] executeUpdates:arrSql];
+}
+
++ (BOOL)insertModelListWhileNotExist:(NSArray *)arrModels
+{
+    NSMutableArray *arrNeedForceInsert = [[NSMutableArray alloc] init];
+    for (DBModel *aModel in arrModels) {
+        if ([aModel primaryValue]) {
+            if ([self isExistModel:aModel]) {
+                continue;
+            }
+        }
+        [arrNeedForceInsert addObject:aModel];
+    }
+    return [self forceInsertModelList:arrNeedForceInsert];
 }
 
 #pragma mark -Model Query

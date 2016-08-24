@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #ifdef MODULE_DB_MANAGER
-#import "FMDB.h"
+#import <FMDB/FMDB.h>
 #endif
 
 /** 主键 */
@@ -38,6 +38,11 @@
 
 /** json解析中忽略该字段 */
 @protocol JsonIgnore <NSObject>
+
+@end
+
+/** DBModel */
+@protocol DBModel <NSObject>
 
 @end
 
