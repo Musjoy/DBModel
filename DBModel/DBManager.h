@@ -4,7 +4,7 @@
 //
 //  Created by 黄磊 on 16/4/6.
 //  Copyright © 2016年 Musjoy. All rights reserved.
-//  <MODULE_DB_MANAGER>
+//  数据库管理<MODULE_DB_MANAGER>
 
 #import <Foundation/Foundation.h>
 #import "DBModel.h"
@@ -32,6 +32,7 @@
 /// 设置DBModel的时间格式
 - (void)setDefalutDateFormat:(NSDateFormatter *)aDateFormatter;
 
+/// 在默认数据库中执行SQL语句
 - (BOOL)executeUpdates:(NSArray *)arrSql;
 - (FMResultSet *)executeQuery:(NSString *)sql, ...;
 
@@ -43,7 +44,7 @@
 + (BOOL)insertModelList:(NSArray *)arrModels;
 /** 强制插入数据库，不检查是否存在 */
 + (BOOL)forceInsertModelList:(NSArray *)arrModels;
-/// 插入列表中不存在于DB中的Model
+/** 插入列表中不存在于DB中的Model */
 + (BOOL)insertModelListWhileNotExist:(NSArray *)arrModels;
 /** 更新model */
 + (BOOL)updateModel:(DBModel *)aModel;

@@ -4,7 +4,7 @@
 //
 //  Created by 黄磊 on 16/4/6.
 //  Copyright © 2016年 Musjoy. All rights reserved.
-//  <MODULE_DB_MODEL>
+//  Json数据库模型<MODULE_DB_MODEL>
 
 #import <Foundation/Foundation.h>
 #ifdef MODULE_DB_MANAGER
@@ -50,13 +50,13 @@
 
 #pragma mark - Public
 
+#pragma mark - Data Format
+
 + (void)setDateFormat:(NSDateFormatter *)aDateFormatter;
 
 + (NSDate *)dateFromString:(NSString *)aDateStr;
 
 + (NSString *)stringFromDate:(NSDate *)aDate;
-
-- (NSDictionary *)toDictionary;
 
 
 #pragma mark - JSON
@@ -75,6 +75,8 @@
 
 
 + (NSMutableArray*)arrayOfModelsFromDictionaries:(NSArray*)array error:(NSError**)err;
+
+- (NSDictionary *)toDictionary;
 
 - (NSString *)toJSONString;
 
@@ -95,7 +97,7 @@
 + (NSString *)defaultValueFor:(NSString *)property;
 /** 对应主键是否自增 */
 + (BOOL)isPrimaryKeyAutoIncrement:(NSString *)property;
-/// 返回NSNumber的数据类型，可重写该方法定义数据类型
+/** 返回NSNumber的数据类型，可重写该方法定义数据类型 */
 + (NSString *)typeNameForNumber:(NSString *)property;
 
 /** 该Model的主键 */

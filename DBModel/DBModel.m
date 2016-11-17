@@ -138,71 +138,6 @@ static Class s_DBModelClass = NULL;
     return [s_dataFormatter stringFromDate:aDate];
 }
 
-- (NSDictionary *)toDictionary
-{
-    // import the data from a dictionary
-    NSArray *arrProperty = [self.class __properties];
-    NSMutableDictionary *dicTmp = [[NSMutableDictionary alloc] init];
-    for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && !p.isAllowedClassype) {
-            id aValue = [self valueForKey:p.name];
-            if (aValue == nil) {
-                continue;
-            }
-            if ([p.type isSubclassOfClass:[NSDictionary class]]) {
-                if ([aValue isKindOfClass:[NSDictionary class]]) {
-                    [dicTmp setObject:aValue forKey:p.name];
-                }
-            }
-            else if ([p.type isSubclassOfClass:[NSArray class]]) {
-                if ([aValue isKindOfClass:[NSArray class]] && [aValue count] > 0) {
-                    NSMutableArray *arrTmp = [[NSMutableArray alloc] init];
-                    for (id object in aValue) {
-                        if ([object isKindOfClass:[NSDictionary class]]) {
-                            [arrTmp addObject:object];
-                        }
-                        else if ([object isKindOfClass:[DBModel class]]) {
-                            [arrTmp addObject:[object toDictionary]];
-                        }
-                        else if ([object respondsToSelector:@selector(toDictionary)]) {
-                            NSDictionary *aDic = [object toDictionary];
-                            if (aDic) {
-                                [arrTmp addObject:aDic];
-                            }
-                        }
-                    }
-                    [dicTmp setObject:arrTmp forKey:p.name];
-                }
-            }
-            else if (p.isDBModel) {
-                if (aValue) {
-                    if ([aValue isKindOfClass:[DBModel class]]) {
-                        NSDictionary *dicValue = [aValue toDictionary];
-                        [dicTmp setObject:dicValue forKey:p.name];
-                    }
-                    else if ([aValue isKindOfClass:[NSDictionary class]]) {
-                        [dicTmp setObject:aValue forKey:p.name];
-                    }
-                }
-            } else if ([aValue respondsToSelector:@selector(toDictionary)]) {
-                NSDictionary *aDic = [aValue toDictionary];
-                if (aDic) {
-                    [dicTmp setObject:aDic forKey:p.name];
-                }
-            }
-            continue;
-        }
-        id value = [self valueForKey:p.name];
-        if (value == nil) {
-            continue;
-        }
-        if ([value isKindOfClass:[NSDate class]]) {
-            value = [DBModel stringFromDate:value];
-        }
-        [dicTmp setObject:value forKey:p.name];
-    }
-    return dicTmp;
-}
 
 #pragma mark - JSON
 
@@ -398,7 +333,7 @@ static Class s_DBModelClass = NULL;
 }
 
 
-+ (NSMutableArray*)arrayOfModelsFromDictionaries:(NSArray*)array error:(NSError**)err
++ (NSMutableArray *)arrayOfModelsFromDictionaries:(NSArray*)array error:(NSError**)err
 {
     //bail early
     if (array == nil || array.count == 0) return nil;
@@ -425,6 +360,72 @@ static Class s_DBModelClass = NULL;
     }
     
     return list;
+}
+
+- (NSDictionary *)toDictionary
+{
+    // import the data from a dictionary
+    NSArray *arrProperty = [self.class __properties];
+    NSMutableDictionary *dicTmp = [[NSMutableDictionary alloc] init];
+    for (DBModelClassProperty *p in arrProperty) {
+        if (p.type && !p.isAllowedClassype) {
+            id aValue = [self valueForKey:p.name];
+            if (aValue == nil) {
+                continue;
+            }
+            if ([p.type isSubclassOfClass:[NSDictionary class]]) {
+                if ([aValue isKindOfClass:[NSDictionary class]]) {
+                    [dicTmp setObject:aValue forKey:p.name];
+                }
+            }
+            else if ([p.type isSubclassOfClass:[NSArray class]]) {
+                if ([aValue isKindOfClass:[NSArray class]] && [aValue count] > 0) {
+                    NSMutableArray *arrTmp = [[NSMutableArray alloc] init];
+                    for (id object in aValue) {
+                        if ([object isKindOfClass:[NSDictionary class]]) {
+                            [arrTmp addObject:object];
+                        }
+                        else if ([object isKindOfClass:[DBModel class]]) {
+                            [arrTmp addObject:[object toDictionary]];
+                        }
+                        else if ([object respondsToSelector:@selector(toDictionary)]) {
+                            NSDictionary *aDic = [object toDictionary];
+                            if (aDic) {
+                                [arrTmp addObject:aDic];
+                            }
+                        }
+                    }
+                    [dicTmp setObject:arrTmp forKey:p.name];
+                }
+            }
+            else if (p.isDBModel) {
+                if (aValue) {
+                    if ([aValue isKindOfClass:[DBModel class]]) {
+                        NSDictionary *dicValue = [aValue toDictionary];
+                        [dicTmp setObject:dicValue forKey:p.name];
+                    }
+                    else if ([aValue isKindOfClass:[NSDictionary class]]) {
+                        [dicTmp setObject:aValue forKey:p.name];
+                    }
+                }
+            } else if ([aValue respondsToSelector:@selector(toDictionary)]) {
+                NSDictionary *aDic = [aValue toDictionary];
+                if (aDic) {
+                    [dicTmp setObject:aDic forKey:p.name];
+                }
+            }
+            continue;
+        }
+        id value = [self valueForKey:p.name];
+        if (value == nil) {
+            continue;
+        }
+        if ([value isKindOfClass:[NSDate class]]) {
+            value = [DBModel stringFromDate:value];
+        }
+        [dicTmp setObject:value forKey:p.name];
+    }
+    return dicTmp;
 }
 
 - (NSString *)toJSONString
@@ -564,9 +565,6 @@ static Class s_DBModelClass = NULL;
 {
     return NO;
 }
-
-
-
 
 + (NSString *)primaryKey
 {
@@ -727,7 +725,7 @@ static Class s_DBModelClass = NULL;
 
 #pragma mark - Private
 
-+ (NSArray*)__properties
++ (NSArray *)__properties
 {
     // fetch the associated object
     NSDictionary* classProperties = objc_getAssociatedObject(self.class, &kClassPropertiesKey);

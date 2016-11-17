@@ -11,7 +11,7 @@
 @implementation DBModelClassProperty
 
 
--(NSString*)description
+- (NSString *)description
 {
     //build the properties string for the current class property
     NSMutableArray* properties = [NSMutableArray arrayWithCapacity:8];

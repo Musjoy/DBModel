@@ -7,8 +7,8 @@
 //
 
 #import "DBManager.h"
-#ifdef HEADER_UM_ANALYSE
-#import HEADER_UM_ANALYSE
+#ifdef HEADER_ANALYSE
+#import HEADER_ANALYSE
 #endif
 #ifdef MODULE_FILE_SOURCE
 #import "FileSource.h"
@@ -144,6 +144,19 @@ static DBManager *s_dbManager = nil;
         return;
     }
     
+    BOOL isSucceed = [self updateAllDB];
+    if (isSucceed) {
+        [[NSUserDefaults standardUserDefaults] setObject:curVersion forKey:key];
+    }
+}
+    
+
+- (BOOL)updateAllDB
+{
+    if (!_db) {
+        return NO;
+    }
+    BOOL result = YES;
     for (NSString *table in self.arrTables) {
         Class tableClass = NSClassFromString(table);
         if (tableClass) {
@@ -156,12 +169,13 @@ static DBManager *s_dbManager = nil;
             }
             BOOL isSucceed = [self executeUpdates:arrSqls];
             if (!isSucceed) {
+                result = NO;
                 NSString *strErr = [NSString stringWithFormat:@"数据库[%@]更新失败", tableName];
-                triggerEvent(stat_Error, @{@"name":strErr});
+                triggerEventStr(STAT_Error, strErr);
             }
         }
     }
-    [[NSUserDefaults standardUserDefaults] setObject:curVersion forKey:key];
+    return result;
 }
 
 #pragma mark - Public
@@ -241,7 +255,7 @@ static DBManager *s_dbManager = nil;
         if (!result) {
             // 这里更新失败之后，需继续更新后面数据，处理方式需要探讨。
             LogError(@"Updata Failed!!!");
-            triggerEvent(stat_Error, @{@"name":@"更新失败"});
+            triggerEventStr(STAT_Error, @"更新失败");
             isSucceed = NO;
         }
     }
@@ -285,7 +299,7 @@ static DBManager *s_dbManager = nil;
         if (!result) {
             // 这里插入失败之后，需继续更新后面数据，处理方式需要探讨。
             LogError(@"Insert Failed!!!");
-            triggerEvent(stat_Error, @{@"name":@"插入失败"});
+            triggerEventStr(STAT_Error, @"插入失败");
             isSucceed = NO;
         }
     }
@@ -677,7 +691,7 @@ static DBManager *s_dbManager = nil;
 
 - (void)checkDBUpdate
 {
-
+    [[self.class shareInstance] updateAllDB];
 }
 
 @end
