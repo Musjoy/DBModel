@@ -107,8 +107,12 @@ static DBManager *s_dbManager = nil;
         [_db close];
         _db = nil;
     }
-    
+#if (defined(DEBUG) || defined(DB_NEED_HOST_PREFIX)) && kServerBaseHost
+    NSString *theBaseHost = [[kServerBaseHost componentsSeparatedByString:@"://"] lastObject];
+    NSString *fileName    = [theBaseHost stringByAppendingFormat:@"-%@.sqlite", dbName];
+#else
     NSString *fileName = [dbName stringByAppendingString:@".sqlite"];
+#endif
     NSString *docsPath = [[NSBundle mainBundle] resourcePath];
     NSString *dbPath   = [docsPath stringByAppendingPathComponent:fileName];
     _db = [FMDatabase databaseWithPath:dbPath];
