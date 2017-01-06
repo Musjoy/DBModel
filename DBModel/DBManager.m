@@ -126,6 +126,14 @@ static DBManager *s_dbManager = nil;
     [_db open];
 }
 
+- (void)closeDefaultDB
+{
+    if (_db) {
+        [_db close];
+        _db = nil;
+    }
+}
+
 - (void)setDefalutDateFormat:(NSDateFormatter *)aDateFormatter
 {
     if (aDateFormatter) {

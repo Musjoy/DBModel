@@ -25,16 +25,19 @@
 
 #pragma mark - Public
 
-/// 请先吊用openDefaultDB，之后才能使用下面的DB操作
+/// 打开指定的数据库，如果不存在则创建
 - (void)openDefaultDB:(NSString *)dbName withTables:(NSArray *)arrTables;
-///  打开项目中的DB，仅供测试使用，请勿使用
+/// 打开项目中的DB，仅供测试使用，请勿使用
 - (void)openLibDB:(NSString *)dbName withTables:(NSArray *)arrTables __attribute__((deprecated("This just for testing, use openDefaultDB:withTables:")));
 /// 设置DBModel的时间格式
 - (void)setDefalutDateFormat:(NSDateFormatter *)aDateFormatter;
 
-/// 在默认数据库中执行SQL语句
+/// 在默认数据库中执行SQL语句，请先吊用openDefaultDB，之后才能使用下面的DB操作
 - (BOOL)executeUpdates:(NSArray *)arrSql;
 - (FMResultSet *)executeQuery:(NSString *)sql, ...;
+
+/// 关闭默认数据库
+- (void)closeDefaultDB;
 
 #pragma mark -Model Operation
 
