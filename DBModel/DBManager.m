@@ -150,11 +150,14 @@ static DBManager *s_dbManager = nil;
 {
     // 加入版本判断，避免频繁更新数据库
     NSString *key = [kDBLastCheckVersion stringByAppendingString:dbName];
-    NSString *lastVersion = [[NSUserDefaults standardUserDefaults] stringForKey:key];
     NSString *curVersion = kClientVersion;
+#if !defined(DEBUG) || !defined(FUNCTION_CHECK_DB_UPDATE_EVERY_TIME)
+    /// 发布版本每次需要判断版本，开发版本，当定义FUNCTION_CHECK_DB_UPDATE_EVERY_TIME，不用判断版本，每次更新数据库
+    NSString *lastVersion = [[NSUserDefaults standardUserDefaults] stringForKey:key];
     if (lastVersion && [lastVersion isEqualToString:curVersion]) {
         return;
     }
+#endif
     
     BOOL isSucceed = [self updateAllDB];
     if (isSucceed) {

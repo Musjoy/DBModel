@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #ifdef MODULE_DB_MANAGER
 #import <FMDB/FMDB.h>
-#endif
+
 
 /** 主键 */
 @protocol Primary <NSObject>
@@ -40,6 +40,8 @@
 @protocol JsonIgnore <NSObject>
 
 @end
+
+#endif
 
 /** DBModel */
 @protocol DBModel <NSObject>
