@@ -7,6 +7,7 @@
 //
 
 #import "DBManager.h"
+#import HEADER_SERVER_URL
 #ifdef HEADER_ANALYSE
 #import HEADER_ANALYSE
 #endif
@@ -32,7 +33,7 @@ static DBManager *s_dbManager = nil;
 
 @implementation DBManager
 
-+ (DBManager *)shareInstance
++ (DBManager *)sharedInstance
 {
     if (s_dbManager == nil)
     {
@@ -64,9 +65,9 @@ static DBManager *s_dbManager = nil;
             arrTables = @[];
         }
 #ifdef DB_MANAGER_USE_LIB
-        [[self shareInstance] openLibDB:theDBName withTables:arrTables];
+        [[self sharedInstance] openLibDB:theDBName withTables:arrTables];
 #else
-        [[self shareInstance] openDefaultDB:theDBName withTables:arrTables];
+        [[self sharedInstance] openDefaultDB:theDBName withTables:arrTables];
 #endif
     }
 }
@@ -235,7 +236,7 @@ static DBManager *s_dbManager = nil;
     }
     NSString *strSql = [aModel insertSql];
     
-    BOOL isSucceed = [[DBManager shareInstance] executeUpdates:@[strSql]];
+    BOOL isSucceed = [[DBManager sharedInstance] executeUpdates:@[strSql]];
     if (!isSucceed) {
         LogError(@"Sql Execute Faild :\n%@", strSql);
     }
@@ -245,11 +246,11 @@ static DBManager *s_dbManager = nil;
 + (BOOL)updateModel:(DBModel *)aModel
 {
     NSString *strSql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE (%@='%@')", [aModel.class tableName], [aModel.class primaryKey], [aModel primaryValue]];
-    FMResultSet *result = [[DBManager shareInstance] executeQuery:strSql];
+    FMResultSet *result = [[DBManager sharedInstance] executeQuery:strSql];
     if (result.next) {
         NSString *strSql1 = [aModel updateSqlFormFMResult:result];
         if (strSql1.length > 0) {
-            BOOL isSucceed = [[DBManager shareInstance] executeUpdates:@[strSql1]];
+            BOOL isSucceed = [[DBManager sharedInstance] executeUpdates:@[strSql1]];
             if (!isSucceed) {
                 LogError(@"Sql Execute Faild :\n%@", strSql1);
             }
@@ -289,7 +290,7 @@ static DBManager *s_dbManager = nil;
     if (primaryValues.length > 0) {
         DBModel *aModel = arrModels[0];
         NSString *strSql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE %@ IN (%@)", [aModel.class tableName], [aModel.class primaryKey], primaryValues];
-        FMResultSet *result = [[DBManager shareInstance] executeQuery:strSql];
+        FMResultSet *result = [[DBManager sharedInstance] executeQuery:strSql];
         return result.next;
     }
     return YES;
@@ -302,7 +303,7 @@ static DBManager *s_dbManager = nil;
     }
     NSString *primaryKey = [aModel.class primaryKey];
     NSString *strSql = [NSString stringWithFormat:@"SELECT %@ FROM %@ WHERE (%@='%@')", primaryKey, [aModel.class tableName], primaryKey, [aModel primaryValue]];
-    FMResultSet *result = [[DBManager shareInstance] executeQuery:strSql];
+    FMResultSet *result = [[DBManager sharedInstance] executeQuery:strSql];
     return result.next;
 }
 
@@ -330,7 +331,7 @@ static DBManager *s_dbManager = nil;
     for (DBModel *aModel in arrModels) {
         [arrSql addObject:[aModel insertSql]];
     }
-    return [[DBManager shareInstance] executeUpdates:arrSql];
+    return [[DBManager sharedInstance] executeUpdates:arrSql];
 }
 
 + (BOOL)insertModelListWhileNotExist:(NSArray *)arrModels
@@ -375,7 +376,7 @@ static DBManager *s_dbManager = nil;
 {
     NSMutableString *strSql = [[NSMutableString alloc] init];
     [strSql appendFormat:@"SELECT * FROM %@ WHERE (%@) LIMIT 1", [aModelClass tableName], strWhereSql];
-    FMResultSet *result = [[self shareInstance] executeQuery:strSql];
+    FMResultSet *result = [[self sharedInstance] executeQuery:strSql];
     if (result.next) {
         return [aModelClass modelWithFMResult:result];
     }
@@ -428,7 +429,7 @@ static DBManager *s_dbManager = nil;
             [strSql appendFormat:@" ORDER BY %@", orderBy];
         }
     }
-    FMResultSet *result = [[self shareInstance] executeQuery:strSql];
+    FMResultSet *result = [[self sharedInstance] executeQuery:strSql];
     NSMutableArray *arr = [[NSMutableArray alloc] init];
     while (result.next) {
         DBModel *aModel = [aModelClass modelWithFMResult:result];
@@ -451,7 +452,7 @@ static DBManager *s_dbManager = nil;
             [strSql appendFormat:@" ORDER BY %@", orderBy];
         }
     }
-    FMResultSet *result = [[self shareInstance] executeQuery:strSql];
+    FMResultSet *result = [[self sharedInstance] executeQuery:strSql];
     NSMutableArray *arr = [[NSMutableArray alloc] init];
     while (result.next) {
         DBModel *aModel = [aModelClass modelWithFMResult:result];
@@ -485,7 +486,7 @@ static DBManager *s_dbManager = nil;
 {
     NSMutableString *strSql = [[NSMutableString alloc] init];
     [strSql appendFormat:@"SELECT count(*) FROM %@ WHERE (%@)", [aModelClass tableName], strWhereSql];
-    FMResultSet *result = [[self shareInstance] executeQuery:strSql];
+    FMResultSet *result = [[self sharedInstance] executeQuery:strSql];
     if (result.next) {
         return [result intForColumnIndex:0];
     }
@@ -706,7 +707,7 @@ static DBManager *s_dbManager = nil;
 
 - (void)checkDBUpdate
 {
-    [[self.class shareInstance] updateAllDB];
+    [[self.class sharedInstance] updateAllDB];
 }
 
 @end

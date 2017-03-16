@@ -16,7 +16,7 @@
 
 @interface DBManager : NSObject
 
-+ (DBManager *)shareInstance;
++ (DBManager *)sharedInstance;
 
 /// 加载默认配置:
 /// 1、定义了<DEFAULT_DB_NAME>，默认打开名称为<DEFAULT_DB_NAME>的数据库，默认创建<DEFAULT_DB_TABLE_LIST>中定义的表
