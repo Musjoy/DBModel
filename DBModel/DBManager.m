@@ -18,9 +18,6 @@
 #import "DBItemStore.h"
 #endif
 
-/** 最后一次数据库检查的app版本 */
-#define kDBLastCheckVersion @"DBLastCheckVersion-"
-
 static DBManager *s_dbManager = nil;
 
 @interface DBManager ()

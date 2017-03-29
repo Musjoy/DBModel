@@ -14,6 +14,11 @@
 #define FILE_NAME_DB_CONFIG @"db_config"
 #endif
 
+/** 最后一次数据库检查的app版本 */
+#ifndef kDBLastCheckVersion
+#define kDBLastCheckVersion @"DBLastCheckVersion-"
+#endif
+
 @interface DBManager : NSObject
 
 + (DBManager *)sharedInstance;
