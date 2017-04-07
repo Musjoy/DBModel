@@ -19,6 +19,9 @@
 #define kDBLastCheckVersion @"DBLastCheckVersion-"
 #endif
 
+//#define DB_NEED_HOST_PREFIX :to use kServerBaseHost as prefix of the db file name
+//#define DB_HIDE_DB_FILE :to hide db file in NSLibraryDirectory (Only use for release)
+
 @interface DBManager : NSObject
 
 + (DBManager *)sharedInstance;

@@ -84,8 +84,18 @@ static DBManager *s_dbManager = nil;
         _db = nil;
     }
     
+#if (defined(DEBUG) || defined(DB_NEED_HOST_PREFIX)) && defined(kServerBaseHost)
+    NSString *theBaseHost = [[kServerBaseHost componentsSeparatedByString:@"://"] lastObject];
+    NSString *fileName    = [theBaseHost stringByAppendingFormat:@"-%@.sqlite", dbName];
+#else
     NSString *fileName = [dbName stringByAppendingString:@".sqlite"];
+#endif
+    
+#if (!defined(DEBUG) && defined(DB_HIDE_DB_FILE))
+    NSString *docsPath = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES)[0];
+#else
     NSString *docsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+#endif
     NSString *dbPath   = [docsPath stringByAppendingPathComponent:fileName];
     _db = [FMDatabase databaseWithPath:dbPath];
     if (_curDateFormatter && _db) {
@@ -105,12 +115,8 @@ static DBManager *s_dbManager = nil;
         [_db close];
         _db = nil;
     }
-#if (defined(DEBUG) || defined(DB_NEED_HOST_PREFIX)) && defined(kServerBaseHost)
-    NSString *theBaseHost = [[kServerBaseHost componentsSeparatedByString:@"://"] lastObject];
-    NSString *fileName    = [theBaseHost stringByAppendingFormat:@"-%@.sqlite", dbName];
-#else
+    
     NSString *fileName = [dbName stringByAppendingString:@".sqlite"];
-#endif
     NSString *docsPath = [[NSBundle mainBundle] resourcePath];
     NSString *dbPath   = [docsPath stringByAppendingPathComponent:fileName];
     _db = [FMDatabase databaseWithPath:dbPath];
