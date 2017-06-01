@@ -488,7 +488,10 @@ static DBManager *s_dbManager = nil;
 + (int)countFromModel:(Class)aModelClass withWhereSql:(NSString *)strWhereSql
 {
     NSMutableString *strSql = [[NSMutableString alloc] init];
-    [strSql appendFormat:@"SELECT count(*) FROM %@ WHERE (%@)", [aModelClass tableName], strWhereSql];
+    [strSql appendFormat:@"SELECT count(*) FROM %@", [aModelClass tableName]];
+    if (strWhereSql.length > 0) {
+        [strSql appendFormat:@" WHERE (%@)", strWhereSql];
+    }
     FMResultSet *result = [[self sharedInstance] executeQuery:strSql];
     if (result.next) {
         return [result intForColumnIndex:0];
