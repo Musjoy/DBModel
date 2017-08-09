@@ -1,15 +1,15 @@
 PODS:
-  - DBModel (0.1.2):
-    - DBModel/DBModel (= 0.1.2)
+  - DBModel (0.1.4):
+    - DBModel/DBModel (= 0.1.4)
     - ModuleCapability (~> 0.1)
-  - DBModel/DBItemStore (0.1.2):
+  - DBModel/DBItemStore (0.1.4):
     - DBModel/DBManager
     - ModuleCapability (~> 0.1)
-  - DBModel/DBManager (0.1.2):
+  - DBModel/DBManager (0.1.4):
     - DBModel/DBModel
     - FMDB
     - ModuleCapability (~> 0.1)
-  - DBModel/DBModel (0.1.2):
+  - DBModel/DBModel (0.1.4):
     - ModuleCapability (~> 0.1)
   - FMDB (2.6.2):
     - FMDB/standard (= 2.6.2)
@@ -25,10 +25,10 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  DBModel: e0647843b55a746bd8ab54e14e89755f459b421e
+  DBModel: 921b7ef773fb1bb87aba0b0f1df3a9c1f22f95c9
   FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
   ModuleCapability: 35cea7154ff855362682e90ecf1be529a533c931
 
 PODFILE CHECKSUM: c2b989914acae19440fdea803c5507c86df66ea2
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.2.1

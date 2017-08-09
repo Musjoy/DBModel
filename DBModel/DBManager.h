@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "DBModel.h"
-#import <FMDB.h>
+#import <FMDB/FMDB.h>
 
 #ifndef FILE_NAME_DB_CONFIG
 #define FILE_NAME_DB_CONFIG @"db_config"
