@@ -223,7 +223,7 @@ static DBItemStore *s_itemStore = nil;
 + (void)deleteItemWithId:(NSString *)relateId ofClass:(NSString *)aClassName identifier:(NSString *)identifier
 {
     NSString *strSql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE relateId='%@' AND storeClass='%@' AND identifier='%@'", [self tableName], relateId, aClassName, identifier];
-    [[DBManager shareInstance] executeUpdates:@[strSql]];
+    [[DBManager sharedInstance] executeUpdates:@[strSql]];
 }
 
 
