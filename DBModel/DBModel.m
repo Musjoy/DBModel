@@ -127,8 +127,6 @@ static Class s_DBModelClass = NULL;
     }
     if (date == nil) {
         date = [NSDate dateWithTimeIntervalSince1970:[[aDateStr substringToIndex:10] longLongValue]];
-        NSTimeZone *timeZome = [NSTimeZone systemTimeZone];
-        date = [date dateByAddingTimeInterval:timeZome.secondsFromGMT];
     }
     return date;
 }
@@ -605,7 +603,7 @@ static Class s_DBModelClass = NULL;
             continue;
         }
         // 获取对应value
-        id value = [result objectForColumnName:p.name];
+        id value = [result objectForColumn:p.name];
         if (value && ![value isKindOfClass:[NSNull class]]) {
             [model setValue:value forKey:p.name];
         }
