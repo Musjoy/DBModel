@@ -81,11 +81,6 @@ static Class s_DBModelClass = NULL;
             // Using NSClassFromString instead of [DBModel class], as this was breaking unit tests, see below
             //http://stackoverflow.com/questions/21394919/xcode-5-unit-test-seeing-wrong-class
             s_DBModelClass = NSClassFromString(NSStringFromClass(self));
-            // 2015-07-17T00:00:00.000Z
-            s_dataFormatter = [[NSDateFormatter alloc] init];
-            s_dataFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-            s_dataFormatter.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:0];
-            s_dataFormatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
         }
     });
 }
@@ -107,18 +102,18 @@ static Class s_DBModelClass = NULL;
 
 + (void)setDateFormat:(NSDateFormatter *)aDateFormatter
 {
-    if (aDateFormatter) {
-        s_dataFormatter = aDateFormatter;
-    }
+    s_dataFormatter = aDateFormatter;
 }
 
 + (NSDate *)dateFromString:(NSString *)aDateStr
 {
     NSDate *date = nil;
     if ([aDateStr isKindOfClass:[NSString class]]) {
-        date = [s_dataFormatter dateFromString:aDateStr];
-        if (date) {
-            return date;
+        if (s_dataFormatter) {
+            date = [s_dataFormatter dateFromString:aDateStr];
+            if (date) {
+                return date;
+            }
         }
     } else if ([aDateStr isKindOfClass:[NSNumber class]]) {
         aDateStr = [(NSNumber *)aDateStr stringValue];
@@ -133,7 +128,10 @@ static Class s_DBModelClass = NULL;
 
 + (NSString *)stringFromDate:(NSDate *)aDate
 {
-    return [s_dataFormatter stringFromDate:aDate];
+    if (s_dataFormatter) {
+        return [s_dataFormatter stringFromDate:aDate];
+    }
+    return [aDate description];
 }
 
 
