@@ -480,7 +480,7 @@ static Class s_DBModelClass = NULL;
 
 + (NSArray *)createOrUpdateTableSqlsWith:(FMResultSet *)tableResult
 {
-    if ([tableResult columnCount] == 0) {
+    if (![tableResult.parentDB tableExists:[self tableName]]) {
         // 如果没有找到以前table，就直接创建
         NSString *strSql = [self createTableSql];
         if (strSql.length > 0) {
