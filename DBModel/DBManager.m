@@ -97,6 +97,7 @@ static DBManager *s_dbManager = nil;
     NSString *docsPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
 #endif
     NSString *dbPath   = [docsPath stringByAppendingPathComponent:fileName];
+    BOOL needUpdate = ![[NSFileManager defaultManager] fileExistsAtPath:dbPath];
     _db = [FMDatabase databaseWithPath:dbPath];
     if (_curDateFormatter && _db) {
         [_db setDateFormat:_curDateFormatter];
@@ -106,7 +107,7 @@ static DBManager *s_dbManager = nil;
 #endif
     self.arrTables = arrTables;
     [_db open];
-    [self createTablesWithDBName:dbName];
+    [self createTablesWithDBName:dbName forceUpdate:needUpdate];
 }
 
 - (void)openLibDB:(NSString *)dbName withTables:(NSArray *)arrTables
@@ -150,18 +151,20 @@ static DBManager *s_dbManager = nil;
 }
 
 // 创建所有的表
-- (void)createTablesWithDBName:(NSString *)dbName
+- (void)createTablesWithDBName:(NSString *)dbName forceUpdate:(BOOL)forceUpdate
 {
     // 加入版本判断，避免频繁更新数据库
     NSString *key = [kDBLastCheckVersion stringByAppendingString:dbName];
     NSString *curVersion = kClientVersion;
+    if (!forceUpdate) {
 #if !defined(DEBUG) || !defined(FUNCTION_CHECK_DB_UPDATE_EVERY_TIME)
-    /// 发布版本每次需要判断版本，开发版本，当定义FUNCTION_CHECK_DB_UPDATE_EVERY_TIME，不用判断版本，每次更新数据库
-    NSString *lastVersion = [[NSUserDefaults standardUserDefaults] stringForKey:key];
-    if (lastVersion && [lastVersion isEqualToString:curVersion]) {
-        return;
-    }
+        /// 发布版本每次需要判断版本，开发版本，当定义FUNCTION_CHECK_DB_UPDATE_EVERY_TIME，不用判断版本，每次更新数据库
+        NSString *lastVersion = [[NSUserDefaults standardUserDefaults] stringForKey:key];
+        if (lastVersion && [lastVersion isEqualToString:curVersion]) {
+            return;
+        }
 #endif
+    }
     
     BOOL isSucceed = [self updateAllDB];
     if (isSucceed) {
