@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #ifdef MODULE_DB_MANAGER
-#import <FMDB/FMDB.h>
+#import "FMDB.h"
 
 
 /** 主键 */
