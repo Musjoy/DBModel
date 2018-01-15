@@ -261,7 +261,9 @@ static Class s_DBModelClass = NULL;
         }
         
         if ([p.type isSubclassOfClass:[NSDate class]]) {
-            aValue = [self.class dateFromString:aValue];
+            if (![aValue isKindOfClass:[NSDate class]]) {
+                aValue = [self.class dateFromString:aValue];
+            }
         } else if ([p.type isSubclassOfClass:[NSNumber class]]) {
             if ([aValue isKindOfClass:[NSString class]]) {
                 if ([p.typeName hasPrefix:@"INT"]) {
