@@ -666,7 +666,7 @@ static Class s_DBModelClass = NULL;
         }
         id newValue = [self valueForKey:p.name];
         NSString *newValueStr = nil;
-        if (newValue == nil) {
+        if (newValue == nil || [newValue isKindOfClass:[NSNull class]]) {
             continue;
         }
         
