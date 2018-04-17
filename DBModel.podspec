@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "DBModel"
-  s.version          = "0.1.10"
+  s.version          = "0.1.11"
   s.summary          = "This is a combination of json parsing and database."
 
   s.homepage         = "https://github.com/Musjoy/DBModel"
