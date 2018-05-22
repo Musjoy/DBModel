@@ -465,7 +465,7 @@ static Class s_DBModelClass = NULL;
     NSArray *arrProperty = [self __properties];
     NSString *separateStr = @"";
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && !p.isAllowedClassype) {
+        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
             continue;
         }
         [sqlStr appendString:separateStr];
@@ -503,7 +503,7 @@ static Class s_DBModelClass = NULL;
     NSString *strPrefix = [NSString stringWithFormat:@"ALTER TABLE %@", [self tableName]];
     NSArray *arrProperty = [self __properties];
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && !p.isAllowedClassype) {
+        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
             continue;
         }
         DBTableInfo *aTableInfo = [dicOld objectForKey:p.name];
@@ -594,7 +594,7 @@ static Class s_DBModelClass = NULL;
     NSArray *arrProperty = [self __properties];
     DBModel *model = [[self alloc] init];
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && !p.isAllowedClassype) {
+        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
             continue;
         }
         if ([p.type isSubclassOfClass:[NSDate class]]) {
@@ -619,7 +619,7 @@ static Class s_DBModelClass = NULL;
     NSArray *arrProperty = [self.class __properties];
     NSString *strSeparateStr = @"";
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && !p.isAllowedClassype) {
+        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
             continue;
         }
         id value = [self valueForKey:p.name];
@@ -661,7 +661,7 @@ static Class s_DBModelClass = NULL;
     
     NSString *strSeparateStr = @"";
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && !p.isAllowedClassype) {
+        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
             continue;
         }
         id newValue = [self valueForKey:p.name];
@@ -848,6 +848,8 @@ static Class s_DBModelClass = NULL;
                         p.convertsOnDemand = YES;
                     } else if ([protocolName isEqualToString:@"JsonIgnore"]) {
                         p.isJsonIgnore = YES;
+                    } else if ([protocolName isEqualToString:@"DBIgnore"]) {
+                        p.isDBIgnore = YES;
                     } else if ([protocolName isEqualToString:@"DBInt"]) {
                         p.typeName = @"INT";
                     } else if ([protocolName isEqualToString:@"DBBool"]) {

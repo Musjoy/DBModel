@@ -39,6 +39,9 @@
 /** If YES - don't parser this from json */
 @property (assign, nonatomic) BOOL isJsonIgnore;
 
+/** If YES - don't save it in DB */
+@property (assign, nonatomic) BOOL isDBIgnore;
+
 /** If YES - it is a sub class of DBModel */
 @property (assign, nonatomic) BOOL isDBModel;
 

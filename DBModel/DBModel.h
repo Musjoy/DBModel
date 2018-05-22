@@ -41,6 +41,11 @@
 
 @end
 
+/** 数据库存储忽略该字段 */
+@protocol DBIgnore <NSObject>
+
+@end
+
 #endif
 
 /** DBModel */
