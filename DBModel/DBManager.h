@@ -51,6 +51,8 @@
 
 /** 插入Model到数据库 */
 + (BOOL)insertModel:(DBModel *)aModel;
+/** 插入Model到数据库，并获得插入model的主键ID */
++ (long long)insertModelGetId:(DBModel *)aModel;
 /** 插入数组列表 */
 + (BOOL)insertModelList:(NSArray *)arrModels;
 /** 强制插入数据库，不检查是否存在 */

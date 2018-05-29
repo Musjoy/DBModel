@@ -249,6 +249,25 @@ static DBManager *s_dbManager = nil;
     return isSucceed;
 }
 
++ (long long)insertModelGetId:(DBModel *)aModel
+{
+    // 检查是否存在改数据
+    BOOL isExist = [self isExistModel:aModel];
+    if (isExist) {
+        // 调用update
+        [self updateModel:aModel];
+        return [[aModel primaryValue] longLongValue];
+    }
+    NSString *strSql = [aModel insertSql];
+    
+    BOOL isSucceed = [[DBManager sharedInstance] executeUpdates:@[strSql]];
+    long long pid = -1;
+    if (isSucceed) {
+        pid = [[DBManager sharedInstance] db].lastInsertRowId;
+    }
+    return pid;
+}
+
 + (BOOL)updateModel:(DBModel *)aModel
 {
     NSString *strSql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE (%@='%@')", [aModel.class tableName], [aModel.class primaryKey], [aModel primaryValue]];
