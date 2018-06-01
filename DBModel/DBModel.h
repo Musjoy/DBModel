@@ -106,7 +106,8 @@
 + (BOOL)isPrimaryKeyAutoIncrement:(NSString *)property;
 /** 返回NSNumber的数据类型，可重写该方法定义数据类型 */
 + (NSString *)typeNameForNumber:(NSString *)property;
-
+/// 是否是数据库需要忽略的字段
++ (BOOL)isDBIgnoreForNumber:(NSString *)property;
 /** 该Model的主键 */
 + (NSString *)primaryKey;
 /** 改Model得主键键值 */

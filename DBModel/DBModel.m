@@ -452,6 +452,11 @@ static Class s_DBModelClass = NULL;
     return @"FLOAT";
 }
 
++ (BOOL)isDBIgnoreForNumber:(NSString *)property
+{
+    return NO;
+}
+
 #ifdef MODULE_DB_MANAGER
 
 + (NSString *)createTableSql
@@ -820,6 +825,7 @@ static Class s_DBModelClass = NULL;
                 
                 if ([propertyType isEqualToString:@"NSNumber"]) {
                     p.typeName = [self typeNameForNumber:p.name];
+                    p.isDBIgnore = [self isDBIgnoreForNumber:p.name];
                 }
                 
                 
