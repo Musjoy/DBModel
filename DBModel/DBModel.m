@@ -903,7 +903,7 @@ static Class s_DBModelClass = NULL;
                                                    reason:[NSString stringWithFormat:@"Property type of %@.%@ is not supported by DBModel.", self.class, p.name]
                                                  userInfo:nil];
                 }
-                
+                p.isDBIgnore = [self isDBIgnoreForNumber:p.name];
             }
             
     //        NSString *nsPropertyName = @(propertyName);
