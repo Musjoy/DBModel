@@ -206,10 +206,10 @@ static Class s_DBModelClass = NULL;
         if (err) *err = [self.class errorWithCode:-10002];
         return nil;
     }
-        
+    
     // import the data from a dictionary
     NSArray *arrProperty = [self.class __properties];
-
+    
     for (DBModelClassProperty *p in arrProperty) {
         if (p.isJsonIgnore) {
             continue;
@@ -470,7 +470,7 @@ static Class s_DBModelClass = NULL;
     NSArray *arrProperty = [self __properties];
     NSString *separateStr = @"";
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
+        if (p.isDBIgnore || (p.type && !p.isAllowedClassype)) {
             continue;
         }
         [sqlStr appendString:separateStr];
@@ -508,7 +508,7 @@ static Class s_DBModelClass = NULL;
     NSString *strPrefix = [NSString stringWithFormat:@"ALTER TABLE %@", [self tableName]];
     NSArray *arrProperty = [self __properties];
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
+        if (p.isDBIgnore || (p.type && !p.isAllowedClassype)) {
             continue;
         }
         DBTableInfo *aTableInfo = [dicOld objectForKey:p.name];
@@ -599,7 +599,7 @@ static Class s_DBModelClass = NULL;
     NSArray *arrProperty = [self __properties];
     DBModel *model = [[self alloc] init];
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
+        if (p.isDBIgnore || (p.type && !p.isAllowedClassype)) {
             continue;
         }
         if ([p.type isSubclassOfClass:[NSDate class]]) {
@@ -624,7 +624,7 @@ static Class s_DBModelClass = NULL;
     NSArray *arrProperty = [self.class __properties];
     NSString *strSeparateStr = @"";
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
+        if (p.isDBIgnore || (p.type && !p.isAllowedClassype)) {
             continue;
         }
         id value = [self valueForKey:p.name];
@@ -661,12 +661,12 @@ static Class s_DBModelClass = NULL;
     NSMutableString *strSql = [[NSMutableString alloc] init];
     [strSql appendFormat:@"UPDATE %@ SET", [self.class tableName]];
     NSArray *arrProperty = [self.class __properties];
-
+    
     BOOL hasUpdate = NO;
     
     NSString *strSeparateStr = @"";
     for (DBModelClassProperty *p in arrProperty) {
-        if (p.type && (!p.isAllowedClassype || p.isDBIgnore)) {
+        if (p.isDBIgnore || (p.type && !p.isAllowedClassype)) {
             continue;
         }
         id newValue = [self valueForKey:p.name];
@@ -733,10 +733,10 @@ static Class s_DBModelClass = NULL;
     // fetch the associated object
     NSDictionary* classProperties = objc_getAssociatedObject(self.class, &kClassPropertiesKey);
     if (classProperties) return [classProperties allValues];
-
+    
     // if here, the class needs to inspect itself
     [self __setup];
-
+    
     // return the property list
     classProperties = objc_getAssociatedObject(self.class, &kClassPropertiesKey);
     return [classProperties allValues];
