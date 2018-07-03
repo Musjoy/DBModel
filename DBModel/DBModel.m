@@ -236,9 +236,8 @@ static Class s_DBModelClass = NULL;
                 }
             } else if ([p.type isSubclassOfClass:[NSArray class]]) {
                 id aValue = [dict objectForKey:p.name];
-                if ([aValue isKindOfClass:[NSArray class]] &&
-                    [aValue count] > 0) {
-                    if (p.protocol.length > 0) {
+                if ([aValue isKindOfClass:[NSArray class]]) {
+                    if (p.protocol.length > 0 && [aValue count] != 0) {
                         Class protocolClass = NSClassFromString(p.protocol);
                         if (protocolClass && [self.class __isJSONModelSubClass:protocolClass]) {
                             // 包含DBModel的数组
@@ -377,7 +376,7 @@ static Class s_DBModelClass = NULL;
                 }
             }
             else if ([p.type isSubclassOfClass:[NSArray class]]) {
-                if ([aValue isKindOfClass:[NSArray class]] && [aValue count] > 0) {
+                if ([aValue isKindOfClass:[NSArray class]]) {
                     NSMutableArray *arrTmp = [[NSMutableArray alloc] init];
                     for (id object in aValue) {
                         if ([object isKindOfClass:[NSDictionary class]]) {
