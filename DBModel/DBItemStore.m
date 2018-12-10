@@ -20,6 +20,12 @@ static DBItemStore *s_itemStore = nil;
 
 @implementation DBModel (DBItemStore)
 
++ (void)storeItems:(NSArray *)arrItems identifier:(NSString *)identifier
+{
+    NSString *className = NSStringFromClass([self class]);
+    return [DBItemStore storeItems:arrItems withClass:className identifier:identifier];
+}
+
 + (__kindof NSArray<DBModel> *)theStoreItemsWithIdentifier:(NSString *)identifier
 {
     return [self theStoreItemsWithIdentifier:identifier orderBy:@"storeOrder"];
@@ -31,10 +37,16 @@ static DBItemStore *s_itemStore = nil;
     return [DBItemStore itemsOfClass:className identifier:identifier orderBy:orderBy];
 }
 
-+ (void)storeItems:(NSArray *)arrItems identifier:(NSString *)identifier
++ (void)setItems:(NSArray *)arrItems withKey:(NSString *)key
 {
     NSString *className = NSStringFromClass([self class]);
-    return [DBItemStore storeItems:arrItems withClass:className identifier:identifier];
+    return [DBItemStore storeItems:arrItems withClass:className identifier:key haveDB:NO];
+}
+
++ (__kindof NSArray<DBModel> *)itemsWithKey:(NSString *)key
+{
+    NSString *className = NSStringFromClass([self class]);
+    return [DBItemStore itemsOfClass:className identifier:key orderBy:@"storeOrder" haveDB:NO];
 }
 
 @end
@@ -68,6 +80,13 @@ static DBItemStore *s_itemStore = nil;
     return YES;
 }
 
++ (int)lengthFor:(NSString *)property
+{
+    if ([property isEqualToString:@"storeData"]) {
+        return 5000;
+    }
+    return 0;
+}
 
 #pragma mark - Update Store Key
 
@@ -135,42 +154,12 @@ static DBItemStore *s_itemStore = nil;
 
 #pragma mark - Public
 
-+ (NSArray *)itemsOfClass:(NSString *)aClassName identifier:(NSString *)identifier
-{
-    NSArray *arr = [self itemsOfClass:aClassName identifier:identifier orderBy:@"storeOrder"];
-    return arr;
-}
-
-+ (NSArray *)itemsOfClass:(NSString *)aClassName identifier:(NSString *)identifier orderBy:(NSString *)orderBy
-{
-    Class itemClass = NSClassFromString(aClassName);
-    if (itemClass == NULL) {
-        return @[];
-    }
-    // 首先读内存缓存
-    NSString *key = [NSString stringWithFormat:@"%@-%@", aClassName, identifier];
-    NSArray *arr = [[self cacheData] objectForKey:key];
-    if (arr.count > 0) {
-        return arr;
-    }
-    if (![self canReadDataWithKey:identifier]) {
-        return @[];
-    }
-    identifier = [identifier stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
-    NSString *relateIdName = [itemClass primaryKey];
-    NSString *strJoin = [NSString stringWithFormat:@"store LEFT JOIN %@ item ON item.%@=store.relateId", [itemClass tableName], relateIdName];
-    NSString *whereSql = [NSString stringWithFormat:@"storeClass='%@' AND identifier='%@' AND item.%@ IS NOT NULL", aClassName, identifier, relateIdName];
-    arr = [DBManager findModelList:self
-                              join:strJoin
-                      withWhereSql:whereSql
-                           orderBy:orderBy];
-    if (arr.count > 0) {
-        [[self cacheData] setObject:arr forKey:key];
-    }
-    return arr;
-}
-
 + (void)storeItems:(NSArray *)arrItems withClass:(NSString *)aClassName identifier:(NSString *)identifier
+{
+    [self storeItems:arrItems withClass:aClassName identifier:identifier haveDB:YES];
+}
+
++ (void)storeItems:(NSArray *)arrItems withClass:(NSString *)aClassName identifier:(NSString *)identifier haveDB:(BOOL)haveDB
 {
     Class itemClass = NSClassFromString(aClassName);
     if (itemClass == NULL) {
@@ -190,10 +179,15 @@ static DBItemStore *s_itemStore = nil;
         DBModel *model = arrItems[i];
         store.relateId = [model valueForKey:idName];
         store.storeOrder = (NSNumber<DBInt> *)[NSNumber numberWithInteger:index];
+        if (!haveDB) {
+            store.storeData = [model toJSONString];
+        }
         [arrUpdate addObject:store];
     }
     if (arrUpdate.count > 0) {
-        [DBManager insertModelListWhileNotExist:arrItems];
+        if (haveDB) {
+            [DBManager insertModelListWhileNotExist:arrItems];
+        }
         [DBManager updateModelList:arrUpdate];
     }
     
@@ -203,12 +197,15 @@ static DBItemStore *s_itemStore = nil;
         NSMutableArray *arrInsert = [[NSMutableArray alloc] init];
         for (NSInteger i=len, len1=arrItems.count; i<len1; i++, index++) {
             DBModel *model = arrItems[i];
-            DBItemStore *sort = [[DBItemStore alloc] init];
-            sort.storeClass = aClassName;
-            sort.relateId = [model valueForKey:idName];
-            sort.identifier = identifier;
-            sort.storeOrder = (NSNumber<DBInt> *)[NSNumber numberWithInteger:index];
-            [arrInsert addObject:sort];
+            DBItemStore *store = [[DBItemStore alloc] init];
+            store.storeClass = aClassName;
+            store.relateId = [model valueForKey:idName];
+            store.identifier = identifier;
+            store.storeOrder = (NSNumber<DBInt> *)[NSNumber numberWithInteger:index];
+            if (!haveDB) {
+                store.storeData = [model toJSONString];
+            }
+            [arrInsert addObject:store];
         }
         [DBManager forceInsertModelList:arrInsert];
     } else if (arr.count > arrItems.count) {
@@ -226,31 +223,72 @@ static DBItemStore *s_itemStore = nil;
     [[DBManager sharedInstance] executeUpdates:@[strSql]];
 }
 
++ (NSArray *)itemsOfClass:(NSString *)aClassName identifier:(NSString *)identifier
+{
+    NSArray *arr = [self itemsOfClass:aClassName identifier:identifier orderBy:@"storeOrder"];
+    return arr;
+}
+
++ (NSArray *)itemsOfClass:(NSString *)aClassName identifier:(NSString *)identifier orderBy:(NSString *)orderBy
+{
+    return [self itemsOfClass:aClassName identifier:identifier orderBy:orderBy haveDB:YES];
+}
+
++ (NSArray *)itemsOfClass:(NSString *)aClassName identifier:(NSString *)identifier orderBy:(NSString *)orderBy haveDB:(BOOL)haveDB
+{
+    Class itemClass = NSClassFromString(aClassName);
+    if (itemClass == NULL) {
+        return @[];
+    }
+    // 首先读内存缓存
+    NSString *key = [NSString stringWithFormat:@"%@-%@", aClassName, identifier];
+    NSArray *arr = [[self cacheData] objectForKey:key];
+    if (arr.count > 0) {
+        return arr;
+    }
+    if (![self canReadDataWithKey:identifier]) {
+        return @[];
+    }
+    identifier = [identifier stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+    if (haveDB) {
+        NSString *relateIdName = [itemClass primaryKey];
+        NSString *strJoin = [NSString stringWithFormat:@"store LEFT JOIN %@ item ON item.%@=store.relateId", [itemClass tableName], relateIdName];
+        NSString *whereSql = [NSString stringWithFormat:@"storeClass='%@' AND identifier='%@' AND item.%@ IS NOT NULL", aClassName, identifier, relateIdName];
+        arr = [DBManager findModelList:self
+                                  join:strJoin
+                          withWhereSql:whereSql
+                               orderBy:orderBy];
+    } else {
+        NSString *whereSql = [NSString stringWithFormat:@"storeClass='%@' AND identifier='%@'", aClassName, identifier];
+        arr = [DBManager findModelList:self
+                          withWhereSql:whereSql
+                               orderBy:orderBy];
+    }
+    
+    if (arr.count > 0) {
+        [[self cacheData] setObject:arr forKey:key];
+    }
+    return arr;
+}
+
 
 #pragma mark - Overwrite
 
 + (DBModel *)modelWithFMResult:(FMResultSet *)result
 {
-//    NSString *storeClass = [result stringForColumn:@"storeClass"];
-//    if (storeClass.length > 0) {
-//        Class itemClass = NSClassFromString(storeClass);
-//        if (itemClass && [itemClass isSubclassOfClass:[DBModel class]]) {
-//            NSString *primaryKey = [itemClass primaryKey];
-//            if ([result.columnNameToIndexMap objectForKey:[primaryKey lowercaseString]]) {
-//                return [itemClass modelWithFMResult:result];
-//            }
-//        }
-//    }
-//
-//    return [super modelWithFMResult:result];
-    
-    if ([result columnCount] > 5) {
+    if ([result columnCount] > 6) {
         NSString *storeClass = [result stringForColumn:@"storeClass"];
         Class itemClass = NSClassFromString(storeClass);
         return [itemClass modelWithFMResult:result];
-    } else {
-        return [super modelWithFMResult:result];
+    } else if ([result columnCount] == 6) {
+        NSString *storeData = [result stringForColumn:@"storeData"];
+        if (storeData.length > 0) {
+            NSString *storeClass = [result stringForColumn:@"storeClass"];
+            Class itemClass = NSClassFromString(storeClass);
+            return [[itemClass alloc] initWithString:storeData error:NULL];
+        }
     }
+    return [super modelWithFMResult:result];
 }
 
 
