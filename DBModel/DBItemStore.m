@@ -263,6 +263,16 @@ static DBItemStore *s_itemStore = nil;
         arr = [DBManager findModelList:self
                           withWhereSql:whereSql
                                orderBy:orderBy];
+        NSMutableArray *newArr = [[NSMutableArray alloc] init];
+        for (NSInteger i=0, len=arr.count; i<len; i++) {
+            DBItemStore *storeItem = arr[i];
+            NSString *storeClass = storeItem.storeClass;
+            Class itemClass = NSClassFromString(storeClass);
+            NSString *storeData = storeItem.storeData;
+            DBModel *aModel = [[itemClass alloc] initWithString:storeData error:NULL];
+            [newArr addObject:aModel];
+        }
+        arr = newArr;
     }
     
     if (arr.count > 0) {
@@ -280,13 +290,6 @@ static DBItemStore *s_itemStore = nil;
         NSString *storeClass = [result stringForColumn:@"storeClass"];
         Class itemClass = NSClassFromString(storeClass);
         return [itemClass modelWithFMResult:result];
-    } else if ([result columnCount] == 6) {
-        NSString *storeData = [result stringForColumn:@"storeData"];
-        if (storeData.length > 0) {
-            NSString *storeClass = [result stringForColumn:@"storeClass"];
-            Class itemClass = NSClassFromString(storeClass);
-            return [[itemClass alloc] initWithString:storeData error:NULL];
-        }
     }
     return [super modelWithFMResult:result];
 }
