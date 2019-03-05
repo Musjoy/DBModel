@@ -233,6 +233,14 @@ static Class s_DBModelClass = NULL;
                         return nil;
                     }
                     [self setValue:value forKey:p.name];
+                } else if (aValue && [aValue isKindOfClass:[NSString class]] && [aValue length] > 0) {
+                    NSError *aErr = nil;
+                    id value = [[p.type alloc] initWithString:aValue error:&aErr];
+                    if (value == nil) {
+                        *err = aErr;
+                        return nil;
+                    }
+                    [self setValue:value forKey:p.name];
                 }
             } else if ([p.type isSubclassOfClass:[NSArray class]]) {
                 id aValue = [dict objectForKey:p.name];
