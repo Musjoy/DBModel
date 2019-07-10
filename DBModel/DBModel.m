@@ -399,6 +399,9 @@ static Class s_DBModelClass = NULL;
                                 [arrTmp addObject:aDic];
                             }
                         }
+                        else if ([object isKindOfClass:NSString.class] || [object isKindOfClass:NSNumber.class]) {
+                            [arrTmp addObject:object];
+                        }
                     }
                     [dicTmp setObject:arrTmp forKey:p.name];
                 }
