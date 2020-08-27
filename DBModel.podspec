@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.homepage         = "https://github.com/Musjoy/DBModel"
   s.license          = 'MIT'
   s.author           = { "Raymond" => "Ray.musjoy@gmail.com" }
-  s.source           = { :git => "https://github.com/Musjoy/DBModel.git", :tag => "v-#{s.version}", :submodules => true }
+  s.source           = { :git => "git@git.musjoy.com:DBModel.git", :tag => "v-#{s.version}", :submodules => true }
 
   s.ios.deployment_target = '7.0'
 
