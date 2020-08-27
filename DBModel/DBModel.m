@@ -7,10 +7,10 @@
 //
 
 #import "DBModel.h"
-#import <DBModel/DBModelClassProperty.h>
+#import "DBModelClassProperty.h"
 #import <objc/runtime.h>
 #ifdef MODULE_DB_MANAGER
-#import <DBModel/DBTableInfo.h>
+#import "DBTableInfo.h"
 #endif
 
 static const char * kClassPropertiesKey;

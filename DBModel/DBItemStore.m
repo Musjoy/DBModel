@@ -7,7 +7,7 @@
 //
 
 #import "DBItemStore.h"
-#import <DBModel/DBManager.h>
+#import "DBManager.h"
 #ifdef MODULE_FILE_SOURCE
 #import "FileSource.h"
 #endif
