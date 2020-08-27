@@ -15,7 +15,7 @@
 #import "FileSource.h"
 #endif
 #ifdef MODULE_DB_ITEM_STORE
-#import "DBItemStore"
+#import <DBModel/DBItemStore.h>
 #endif
 
 static DBManager *s_dbManager = nil;

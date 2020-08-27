@@ -6,7 +6,7 @@
 //  Copyright © 2016年 Musjoy. All rights reserved.
 //
 
-#import "DBModel.h"
+#import <DBModel/DBModel.h>
 
 @interface DBTableInfo : DBModel
 

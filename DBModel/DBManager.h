@@ -7,7 +7,7 @@
 //  数据库管理<MODULE_DB_MANAGER>
 
 #import <Foundation/Foundation.h>
-#import "DBModel.h"
+#import <DBModel/DBModel.h>
 #import <FMDB/FMDB.h>
 
 #ifndef FILE_NAME_DB_CONFIG
