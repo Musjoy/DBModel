@@ -6,7 +6,7 @@
 //  Copyright © 2016年 Musjoy. All rights reserved.
 //
 
-#import <DBModel/DBModel.h>
+#import "DBModel.h"
 
 #ifndef FILE_NAME_STORE_KEYS
 #define FILE_NAME_STORE_KEYS @"store_key"
