@@ -8,11 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		22046EB3891721C917146FE8 /* Pods_DBModel_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0F2E616D346D0012F7FB467 /* Pods_DBModel_Example.framework */; };
-		46CBA1FB24F7A45D00C99799 /* DBModelClassProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CBA1F124F7A45D00C99799 /* DBModelClassProperty.m */; };
-		46CBA1FC24F7A45E00C99799 /* DBModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CBA1F424F7A45D00C99799 /* DBModel.m */; };
-		46CBA1FD24F7A45E00C99799 /* DBTableInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CBA1F624F7A45D00C99799 /* DBTableInfo.m */; };
-		46CBA1FE24F7A45E00C99799 /* DBItemStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CBA1F924F7A45D00C99799 /* DBItemStore.m */; };
-		46CBA1FF24F7A45E00C99799 /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 46CBA1FA24F7A45D00C99799 /* DBManager.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -42,16 +37,6 @@
 
 /* Begin PBXFileReference section */
 		38E669EDE84FA56E4D30C330 /* Pods-DBModel_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBModel_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DBModel_Example/Pods-DBModel_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		46CBA1F124F7A45D00C99799 /* DBModelClassProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBModelClassProperty.m; sourceTree = "<group>"; };
-		46CBA1F224F7A45D00C99799 /* DBTableInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBTableInfo.h; sourceTree = "<group>"; };
-		46CBA1F324F7A45D00C99799 /* DBItemStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBItemStore.h; sourceTree = "<group>"; };
-		46CBA1F424F7A45D00C99799 /* DBModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBModel.m; sourceTree = "<group>"; };
-		46CBA1F524F7A45D00C99799 /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
-		46CBA1F624F7A45D00C99799 /* DBTableInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBTableInfo.m; sourceTree = "<group>"; };
-		46CBA1F724F7A45D00C99799 /* DBModelClassProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBModelClassProperty.h; sourceTree = "<group>"; };
-		46CBA1F824F7A45D00C99799 /* DBModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBModel.h; sourceTree = "<group>"; };
-		46CBA1F924F7A45D00C99799 /* DBItemStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBItemStore.m; sourceTree = "<group>"; };
-		46CBA1FA24F7A45D00C99799 /* DBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBManager.m; sourceTree = "<group>"; };
 		543B700995200BFB15BF390F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		57CC6B9198A5C176D6BFA957 /* Pods_DBModel_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DBModel_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AA8FA838101E655D3188BE9 /* DBModel.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DBModel.podspec; path = ../DBModel.podspec; sourceTree = "<group>"; };
@@ -108,24 +93,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		46CBA1F024F7A45D00C99799 /* DBModel */ = {
-			isa = PBXGroup;
-			children = (
-				46CBA1F324F7A45D00C99799 /* DBItemStore.h */,
-				46CBA1F924F7A45D00C99799 /* DBItemStore.m */,
-				46CBA1F524F7A45D00C99799 /* DBManager.h */,
-				46CBA1FA24F7A45D00C99799 /* DBManager.m */,
-				46CBA1F824F7A45D00C99799 /* DBModel.h */,
-				46CBA1F424F7A45D00C99799 /* DBModel.m */,
-				46CBA1F724F7A45D00C99799 /* DBModelClassProperty.h */,
-				46CBA1F124F7A45D00C99799 /* DBModelClassProperty.m */,
-				46CBA1F224F7A45D00C99799 /* DBTableInfo.h */,
-				46CBA1F624F7A45D00C99799 /* DBTableInfo.m */,
-			);
-			name = DBModel;
-			path = ../../DBModel;
-			sourceTree = "<group>";
-		};
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
@@ -165,7 +132,6 @@
 			children = (
 				6003F59C195388D20070C39A /* MJAppDelegate.h */,
 				6003F59D195388D20070C39A /* MJAppDelegate.m */,
-				46CBA1F024F7A45D00C99799 /* DBModel */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				6003F5A5195388D20070C39A /* MJViewController.h */,
 				6003F5A6195388D20070C39A /* MJViewController.m */,
@@ -289,7 +255,6 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -407,14 +372,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				46CBA1FD24F7A45E00C99799 /* DBTableInfo.m in Sources */,
 				6003F59E195388D20070C39A /* MJAppDelegate.m in Sources */,
-				46CBA1FC24F7A45E00C99799 /* DBModel.m in Sources */,
-				46CBA1FE24F7A45E00C99799 /* DBItemStore.m in Sources */,
 				6003F5A7195388D20070C39A /* MJViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
-				46CBA1FB24F7A45D00C99799 /* DBModelClassProperty.m in Sources */,
-				46CBA1FF24F7A45E00C99799 /* DBManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
